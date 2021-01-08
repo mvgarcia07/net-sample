@@ -21,12 +21,13 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: VSBuild@1
+- task: DotNetCoreCLI@2
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:publish /p:PublishSingleFile=True /p:RuntimeIdentifier=win-x64 /p:outputpath=$(Build.ArtifactStagingDirectory)\'
+    command: publish 
+    arguments: -r win-x64 -p:PublishSingleFile=True --self-contained false -o $(Build.ArtifactStagingDirectory)
+    projects: '**/*.csproj'
+    publishWebProjects: false
+  enabled: true
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
