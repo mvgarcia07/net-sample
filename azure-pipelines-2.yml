@@ -26,6 +26,7 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    msbuildArgs: '/t:publish /p:PublishSingleFile=True /p:RuntimeIdentifier=win-x64 /p:outputpath=$(Build.ArtifactStagingDirectory)\'
     
 - task: DotNetCoreCLI@2
   inputs:
