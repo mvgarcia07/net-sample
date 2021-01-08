@@ -26,14 +26,7 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    arguments: -c Release --runtime win-x64 /p:PublishSingleFile=true --self-contained --output $(Build.ArtifactStagingDirectory) --no-dependencies
-    projects: $(Build.SourcesDirectory)\net-sample\net-sample.csproj
-    zipAfterPublish: true
-
+    msbuildArgs: '/t:publish /p:PublishSingleFile=True /p:RuntimeIdentifier=win-x64 /p:outputpath=$(Build.ArtifactStagingDirectory)\'
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
