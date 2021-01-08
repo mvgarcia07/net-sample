@@ -21,12 +21,12 @@ steps:
   inputs:
     restoreSolution: '$(solution)'
 
-- task: MSBuild@1
+- task: VSBuild@1
   inputs:
-    solution: '**/*.sln'
-    msbuildArguments: '/t:restore;rebuild;publish /p:DeployOnBuild=True /p:DeployDefaultTarget=WebPublish /p:WebPublishMethod=FileSystem /p:SelfContained=true /p:Platform="Any CPU" /p:Configuration=Release /p:RuntimeIdentifier=win-x64'
-    msbuildVersion: latest
-
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
@@ -34,7 +34,14 @@ steps:
     projects: $(Build.SourcesDirectory)\net-sample\net-sample.csproj
     zipAfterPublish: true
 
-- task: PublishBuildArtifacts@1
+- task: DotNetCoreCLI@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'publish'
+    command: 'publish'
+    publishWebProjects: false
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    publishLocation: 'pipeline'
